@@ -11,7 +11,7 @@ mkdir -p ./build
 cp manifest.json background.js content.js ./build/
 cp -r styles ./build/
 mkdir -p ./build/assets/icons
-cp -r perplexity2slack/assets/icons/* ./build/assets/icons/
+cp -r assets/icons/* ./build/assets/icons/
 
 # Create the zip file
 cd ./build
