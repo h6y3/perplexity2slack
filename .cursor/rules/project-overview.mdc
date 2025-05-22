@@ -1,0 +1,27 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+---
+title: Project Overview and Build Process
+order: 1
+isEnabled: true
+---
+# Project Overview and Build Process
+
+This Chrome Extension, "Perplexity to Slack," is structured as follows:
+
+- **Manifest**: `[manifest.json](mdc:manifest.json)` defines the extension.
+- **Core Logic**:
+    - `[content.js](mdc:content.js)`: Handles DOM manipulation on Perplexity.ai pages, content extraction, formatting for Slack, and clipboard operations.
+    - `[background.js](mdc:background.js)`: Background service worker for extension-level tasks.
+- **Assets**:
+    - Icons are located in `[assets/icons/](mdc:assets/icons)`.
+    - Styles for the UI elements (like the button) are in `[styles/button.css](mdc:styles/button.css)`.
+- **Build**:
+    - The extension is packaged using the `[build.sh](mdc:build.sh)` script. This script copies the necessary files into a temporary directory and creates a zip file in `dist/`. It does **not** use Webpack or npm.
+- **Testing**:
+    - Testing is primarily manual, using the example HTML files found in the `[tests/](mdc:tests)` directory and by loading the packed extension in Chrome. Automated test runners are not currently in use.
+
+Key files to understand the core functionality are `[manifest.json](mdc:manifest.json)`, `[content.js](mdc:content.js)`, and `[build.sh](mdc:build.sh)`.

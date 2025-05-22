@@ -62,21 +62,13 @@ This section is for both human contributors and AI agents (like Cursor or Claude
    cd perplexity2slack
    ```
 
-2. Install dependencies:
+2. Build the extension:
    ```bash
-   npm install
-   ```
-
-3. Build the extension:
-   ```bash
-   # Generate icons if needed
-   npm run generate-icons
-   
    # Build the extension package
    ./build.sh
    ```
 
-4. Install in Chrome:
+3. Install in Chrome:
    - Navigate to `chrome://extensions/`
    - Enable "Developer mode" in the top-right corner
    - Either:
@@ -105,14 +97,9 @@ perplexity2slack/
 ### Build and Test Process
 
 ```bash
-# Install dependencies
-npm install
-
-# Generate icons from SVG source (if needed, primarily for initial setup or icon changes)
-npm run generate-icons
-
-# Run tests (Currently, manual testing is the primary method using the example HTML files in tests/)
-# Future: npm test (if a dedicated test runner and suites are re-established)
+# Testing
+# Testing is performed manually by loading the extension in Chrome and by using the
+# example HTML files provided in the tests/ directory.
 
 # Build the extension package
 ./build.sh

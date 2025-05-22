@@ -1,0 +1,20 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+---
+title: extractContent() Usage Guideline
+order: 2
+isEnabled: true
+---
+# `extractContent()` Usage Guideline
+
+When extracting text from a Perplexity response within `[content.js](mdc:content.js)` for copying or formatting, **always use the `extractContent()` function**.
+
+Do not call `extractStructuredText()` directly.
+
+- `extractContent()` is the primary public function for this purpose and handles necessary pre-processing, such as citation removal from the DOM.
+- `extractStructuredText()` is an internal helper function and should only be called from within `extractContent()`.
+
+**Rationale:** Calling `extractStructuredText()` directly may bypass crucial preprocessing steps, leading to incomplete or incorrect content extraction and potentially breaking the copy-to-clipboard functionality. This rule is critical for maintaining the integrity of the content extraction pipeline.
