@@ -198,19 +198,30 @@ function extractStructuredText(element) {
  */
 function cleanTextContent(text) {
   return text
-    // Remove citation references with brackets [1], [2], etc.
+    // First pass: Remove citation references with brackets [1], [2], etc.
     .replace(/\s?\[\d+\](?:\[\d+\])*\s?/g, ' ')
     // Remove other citation format [1]
     .replace(/\[\s*\d+\s*\]/g, '')
-    // Remove numbers that appear to be citations (likely from Perplexity)
-    .replace(/\s\d{1,3}(?!\d)/g, ' ')
-    // Remove unbracketed citations at end of sentences
-    .replace(/\s?\d+(?:\d+)*\s?(?=\.|,|;|$)/g, '')
+    
+    // Second pass: Remove numbers that appear right after letters (e.g., "rate of 5.35%10")
+    .replace(/(\D)(\d{1,3})(?=\s|$|\.|\,|\;)/g, '$1')
+    
+    // Third pass: Remove standalone citation numbers
+    .replace(/\s\d{1,3}(?!\d|\.|%)/g, ' ')
+    
+    // Fourth pass: Remove any remaining citation number patterns
+    .replace(/\d+(?:\s*,\s*\d+)*(?=\s*(?:\.|,|;|$))/g, '')
+    
+    // Fix spacing issues from removed citations
+    .replace(/\s+/g, ' ')
+    
     // Fix spacing before punctuation (remove extra spaces)
     .replace(/\s+([.,;:!?])/g, '$1')
+    
     // Add space after punctuation if not already present
     .replace(/([.,;:!?])(?![\s\n]|$)/g, '$1 ')
-    // Fix double spaces
+    
+    // Final cleanup: Fix double spaces
     .replace(/\s{2,}/g, ' ')
     .trim();
 }
@@ -506,16 +517,7 @@ function addSlackButton(responseElement) {
           }
           
           // Clean text content
-          let text = el.textContent
-            // Remove citation references [1], [2], etc.
-            .replace(/\s?\[\d+\](?:\[\d+\])*\s?/g, ' ')
-            // Remove other citation format
-            .replace(/\[\s*\d+\s*\]/g, '')
-            // Remove numbers that appear to be citations (likely from Perplexity)
-            .replace(/\s\d{1,3}(?!\d)/g, ' ')
-            // Remove unbracketed citations at end
-            .replace(/\s\d+(?:\s\d+)*\s?(?=\.|,|;|$)/g, '')
-            .trim();
+          let text = cleanTextContent(el.textContent);
           
           // Skip empty or already processed content
           if (!text || processedTexts.has(text.toLowerCase())) {
@@ -531,12 +533,7 @@ function addSlackButton(responseElement) {
             // Process list items
             const items = Array.from(el.querySelectorAll('li'));
             for (const item of items) {
-              const itemText = item.textContent
-                .replace(/\s?\[\d+\](?:\[\d+\])*\s?/g, ' ')
-                .replace(/\[\s*\d+\s*\]/g, '')
-                .replace(/\s\d{1,3}(?!\d)/g, ' ')
-                .replace(/\s\d+(?:\s\d+)*\s?(?=\.|,|;|$)/g, '')
-                .trim();
+              const itemText = cleanTextContent(item.textContent);
                 
               if (itemText && !processedTexts.has(itemText.toLowerCase())) {
                 processedContent.push(`• ${itemText}`);
@@ -562,12 +559,7 @@ function addSlackButton(responseElement) {
           extractedContent = contentContainer.textContent || '';
           
           // Clean up the fallback text
-          extractedContent = extractedContent
-            .replace(/\s?\[\d+\](?:\[\d+\])*\s?/g, ' ')
-            .replace(/\[\s*\d+\s*\]/g, '')
-            .replace(/\s\d+(?:\s\d+)*\s?(?=\.|,|;|$)/g, '')
-            .replace(/\s{2,}/g, ' ')
-            .trim();
+          extractedContent = cleanTextContent(extractedContent);
         }
         
         console.log('Extracted content length:', extractedContent.length);
@@ -578,12 +570,7 @@ function addSlackButton(responseElement) {
         extractedContent = responseElement.textContent || '';
         
         // Clean up the fallback text
-        extractedContent = extractedContent
-          .replace(/\s?\[\d+\](?:\[\d+\])*\s?/g, ' ')
-          .replace(/\[\s*\d+\s*\]/g, '')
-          .replace(/\s\d+(?:\s\d+)*\s?(?=\.|,|;|$)/g, '')
-          .replace(/\s{2,}/g, ' ')
-          .trim();
+        extractedContent = cleanTextContent(extractedContent);
       }
       
       // Format for Slack - simple formatting
