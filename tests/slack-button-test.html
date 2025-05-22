@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slack Button Test</title>
+  <style>
+    /* Include our button styles */
+    .slack-button-container {
+      display: inline-flex;
+      align-items: center;
+      position: relative;
+      margin: 20px;
+    }
+
+    .slack-copy-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
+      background: transparent;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      color: currentColor;
+      font-family: inherit;
+      font-size: inherit;
+    }
+
+    .slack-copy-button:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .dark .slack-copy-button:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .slack-copy-button svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .slack-copy-button.active {
+      transform: scale(1.05);
+    }
+
+    .slack-copy-button.success {
+      color: #2EB67D;
+    }
+
+    .slack-copy-button.error {
+      color: #E01E5A;
+    }
+
+    .slack-button-tooltip {
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      margin-bottom: 8px;
+      padding: 4px 8px;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      font-size: 12px;
+      border-radius: 4px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      z-index: 1000;
+      font-family: inherit;
+    }
+
+    .dark .slack-button-tooltip {
+      background-color: rgba(30, 30, 30, 0.9);
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .slack-button-tooltip:after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 4px;
+      border-style: solid;
+      border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
+    }
+
+    .dark .slack-button-tooltip:after {
+      border-color: rgba(30, 30, 30, 0.9) transparent transparent transparent;
+    }
+
+    .slack-button-container:hover .slack-button-tooltip {
+      opacity: 1;
+    }
+
+    .slack-copy-button .checkmark {
+      display: none;
+      position: absolute;
+      width: 16px;
+      height: 16px;
+    }
+
+    .slack-copy-button.success .slack-icon {
+      display: none;
+    }
+
+    .slack-copy-button.success .checkmark {
+      display: block;
+      color: #2EB67D;
+    }
+
+    /* Test page styling */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .test-toolbar {
+      display: flex;
+      align-items: center;
+      padding: 8px;
+      border-radius: 8px;
+      background-color: #f5f5f5;
+      margin-bottom: 20px;
+    }
+
+    .dark-mode {
+      background-color: #1a1a1a;
+      color: #fff;
+    }
+
+    .dark-mode .test-toolbar {
+      background-color: #333;
+    }
+
+    .dark-mode-toggle {
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    .copy-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
+      background: transparent;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .copy-button:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .dark .copy-button:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Perplexity to Slack Button Test</h1>
+
+  <div class="dark-mode-toggle">
+    <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
+  </div>
+
+  <div class="test-toolbar">
+    <button class="copy-button">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-copy">
+        <path
+          d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z">
+        </path>
+        <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1"></path>
+      </svg>
+    </button>
+
+    <!-- Our Slack Button -->
+    <div class="slack-button-container">
+      <div class="slack-button-tooltip">Copy for Slack</div>
+      <button class="slack-copy-button" title="Copy for Slack" aria-label="Copy for Slack" type="button">
+        <svg class="slack-icon" width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M6.194 14.644c0 1.16-.943 2.107-2.103 2.107-1.16 0-2.103-.946-2.103-2.107 0-1.16.943-2.106 2.103-2.106h2.103v2.106zm1.061 0c0-1.16.943-2.106 2.103-2.106 1.16 0 2.103.946 2.103 2.106v5.274c0 1.16-.943 2.107-2.103 2.107-1.16 0-2.103-.946-2.103-2.107v-5.274z"
+            fill="#E01E5A" />
+          <path
+            d="M9.358 6.161c-1.16 0-2.103-.946-2.103-2.106 0-1.16.943-2.107 2.103-2.107 1.16 0 2.103.946 2.103 2.107v2.106H9.358zm0 1.06c1.16 0 2.103.946 2.103 2.107 0 1.16-.943 2.107-2.103 2.107H4.09c-1.16 0-2.103-.946-2.103-2.107 0-1.16.943-2.106 2.103-2.106h5.27z"
+            fill="#36C5F0" />
+          <path
+            d="M17.81 9.328c0-1.16.943-2.106 2.103-2.106 1.16 0 2.103.946 2.103 2.106 0 1.16-.943 2.107-2.103 2.107h-2.103V9.328zm-1.062 0c0 1.16-.943 2.107-2.103 2.107-1.16 0-2.103-.946-2.103-2.107V4.054c0-1.16.943-2.107 2.103-2.107 1.16 0 2.103.946 2.103 2.107v5.274z"
+            fill="#2EB67D" />
+          <path
+            d="M14.645 17.812c1.16 0 2.103.946 2.103 2.106 0 1.16-.943 2.107-2.103 2.107-1.16 0-2.103-.946-2.103-2.107v-2.106h2.103zm0-1.061c-1.16 0-2.103-.946-2.103-2.107 0-1.16.943-2.106 2.103-2.106h5.27c1.16 0 2.103.946 2.103 2.106 0 1.16-.943 2.107-2.103 2.107h-5.27z"
+            fill="#ECB22E" />
+        </svg>
+        <svg class="checkmark tabler-icon tabler-icon-circle-check" width="16" height="16" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
+          <path d="M9 12l2 2l4 -4"></path>
+        </svg>
+      </button>
+    </div>
+
+    <button class="copy-button">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-dots">
+        <path d="M5 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path>
+        <path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path>
+        <path d="M19 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path>
+      </svg>
+    </button>
+  </div>
+
+  <h2>Test States</h2>
+  <div>
+    <button onclick="showSuccessFeedback()">Show Success Feedback</button>
+    <button onclick="showErrorFeedback()">Show Error Feedback</button>
+    <button onclick="resetButton()">Reset Button</button>
+  </div>
+
+  <script>
+    // Toggle dark mode
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      document.body.classList.toggle('dark');
+    }
+
+    // Show success feedback
+    function showSuccessFeedback() {
+      const button = document.querySelector('.slack-copy-button');
+      const originalTitle = button.title;
+      button.classList.add('success');
+      button.classList.add('active');
+      button.title = 'Copied to clipboard!';
+
+      // Update tooltip
+      const tooltip = document.querySelector('.slack-button-tooltip');
+      if (tooltip) {
+        tooltip.textContent = 'Copied to clipboard!';
+      }
+
+      // Reset after animation
+      setTimeout(() => {
+        button.classList.remove('success');
+        button.classList.remove('active');
+        button.title = originalTitle;
+
+        // Reset tooltip
+        if (tooltip) {
+          tooltip.textContent = 'Copy for Slack';
+        }
+      }, 2000);
+    }
+
+    // Show error feedback
+    function showErrorFeedback() {
+      const button = document.querySelector('.slack-copy-button');
+      const originalTitle = button.title;
+      button.classList.add('error');
+      button.classList.add('active');
+      button.title = 'Failed to copy';
+
+      // Update tooltip
+      const tooltip = document.querySelector('.slack-button-tooltip');
+      if (tooltip) {
+        tooltip.textContent = 'Failed to copy';
+      }
+
+      // Reset after animation
+      setTimeout(() => {
+        button.classList.remove('error');
+        button.classList.remove('active');
+        button.title = originalTitle;
+
+        // Reset tooltip
+        if (tooltip) {
+          tooltip.textContent = 'Copy for Slack';
+        }
+      }, 2000);
+    }
+
+    // Reset button
+    function resetButton() {
+      const button = document.querySelector('.slack-copy-button');
+      button.classList.remove('success');
+      button.classList.remove('error');
+      button.classList.remove('active');
+      button.title = 'Copy for Slack';
+
+      // Reset tooltip
+      const tooltip = document.querySelector('.slack-button-tooltip');
+      if (tooltip) {
+        tooltip.textContent = 'Copy for Slack';
+      }
+    }
+  </script>
+</body>
+
+</html>
