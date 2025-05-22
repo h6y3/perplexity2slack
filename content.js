@@ -197,33 +197,29 @@ function extractStructuredText(element) {
  * @returns {string} - The cleaned text
  */
 function cleanTextContent(text) {
-  return text
-    // First pass: Remove citation references with brackets [1], [2], etc.
-    .replace(/\s?\[\d+\](?:\[\d+\])*\s?/g, ' ')
-    // Remove other citation format [1]
-    .replace(/\[\s*\d+\s*\]/g, '')
-    
-    // Second pass: Remove numbers that appear right after letters (e.g., "rate of 5.35%10")
-    .replace(/(\D)(\d{1,3})(?=\s|$|\.|\,|\;)/g, '$1')
-    
-    // Third pass: Remove standalone citation numbers
-    .replace(/\s\d{1,3}(?!\d|\.|%)/g, ' ')
-    
-    // Fourth pass: Remove any remaining citation number patterns
-    .replace(/\d+(?:\s*,\s*\d+)*(?=\s*(?:\.|,|;|$))/g, '')
-    
-    // Fix spacing issues from removed citations
-    .replace(/\s+/g, ' ')
-    
-    // Fix spacing before punctuation (remove extra spaces)
-    .replace(/\s+([.,;:!?])/g, '$1')
-    
-    // Add space after punctuation if not already present
-    .replace(/([.,;:!?])(?![\s\n]|$)/g, '$1 ')
-    
-    // Final cleanup: Fix double spaces
-    .replace(/\s{2,}/g, ' ')
-    .trim();
+  // Direct citation removal - completely eliminate bracketed citations
+  let cleaned = text;
+  
+  // Remove citation patterns like [1], [2], [10], etc.
+  cleaned = cleaned.replace(/\s?\[\d+\]\s?/g, ' ');
+  
+  // Handle consecutive citations like [1][2][3]
+  cleaned = cleaned.replace(/\s?\[\d+\](?:\[\d+\])+\s?/g, ' ');
+  
+  // Fix any remaining citation formats like [ 1 ] with spaces inside
+  cleaned = cleaned.replace(/\s?\[\s*\d+\s*\]\s?/g, ' ');
+  
+  // Remove unbracketed citations at end of sentences
+  cleaned = cleaned.replace(/\s?\d+(?:\d+)*\s?(?=\.|,|;|$)/g, '');
+  
+  // Fix spacing issues (double spaces, etc.)
+  cleaned = cleaned.replace(/\s{2,}/g, ' ');
+  
+  // Fix spacing around punctuation
+  cleaned = cleaned.replace(/\s+([.,;:!?])/g, '$1');
+  cleaned = cleaned.replace(/([.,;:!?])(?![\s\n]|$)/g, '$1 ');
+  
+  return cleaned.trim();
 }
 
 // -------------------- Formatting Functions --------------------
