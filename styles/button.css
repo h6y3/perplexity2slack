@@ -1,6 +1,8 @@
+/* Slack button styling for Perplexity.ai */
 .slack-button-container {
   display: inline-flex;
   align-items: center;
+  position: relative;
 }
 
 .slack-copy-button {
@@ -14,15 +16,17 @@
   cursor: pointer;
   transition: all 0.2s ease;
   color: currentColor;
+  font-family: inherit;
+  font-size: inherit;
 }
 
-/* Hover state for toolbar button */
-.slack-copy-button:hover {
+/* These styles will only apply if the Perplexity classes are not found */
+.slack-copy-button:hover:not(.focus-visible\:bg-offsetPlus) {
   background-color: rgba(0, 0, 0, 0.05);
 }
 
 /* Dark mode hover state */
-.dark .slack-copy-button:hover {
+.dark .slack-copy-button:hover:not(.dark\:focus-visible\:bg-offsetPlusDark) {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -44,12 +48,76 @@
   color: #E01E5A;
 }
 
+/* Tooltip styling */
+.slack-button-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 8px;
+  padding: 4px 8px;
+  background-color: #222;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 1000;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.dark .slack-button-tooltip {
+  background-color: #222;
+  color: #fff;
+}
+
+/* Tooltip arrow */
+.slack-button-tooltip:after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 4px;
+  border-style: solid;
+  border-color: #222 transparent transparent transparent;
+}
+
+.dark .slack-button-tooltip:after {
+  border-color: #222 transparent transparent transparent;
+}
+
+/* Show tooltip on hover */
+.slack-button-container:hover .slack-button-tooltip {
+  opacity: 1;
+}
+
+/* Success checkmark styling */
+.slack-copy-button .checkmark {
+  display: none;
+  position: absolute;
+  width: 16px;
+  height: 16px;
+}
+
+.slack-copy-button.success .slack-icon {
+  display: none;
+}
+
+.slack-copy-button.success .checkmark {
+  display: block;
+  color: currentColor;
+}
+
 /* Mobile responsive styling */
 @media (max-width: 768px) {
   .slack-copy-button {
     padding: 4px;
   }
-  
+
   .slack-copy-button svg {
     width: 14px;
     height: 14px;

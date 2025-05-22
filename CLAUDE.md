@@ -1,159 +1,118 @@
-# Markdown to Slack Converter Chrome Extension
+<!-- It's important to note that this document reflects earlier design phases and specific instructions for AI collaboration (like with Claude). Much of the technical detail here may be outdated. For current project structure, implementation details, and up-to-date best practices, please refer to README.md. -->
 
-## Project Overview
+# Perplexity to Slack - AI Development Notes & Lessons Learned
 
-Create a Chrome Extension that adds a "Copy for Slack" button to web pages containing markdown content. When clicked, the extension will extract the markdown, convert it to Slack's mrkdwn format, and copy it to the clipboard for easy pasting into Slack.
+## Project Overview (Historical Context)
 
-## Core Features
+This document originally outlined a Chrome Extension to add a "Copy for Slack" button to web pages, extract markdown, convert it to Slack's mrkdwn format, and copy it to the clipboard. The project has since focused specifically on Perplexity.ai.
 
-1. **Button Injection**: Add a Slack-branded button next to markdown content
-2. **Markdown Extraction**: Extract markdown content from the DOM
-3. **Format Conversion**: Convert standard markdown to Slack's mrkdwn format
-4. **Clipboard Integration**: Copy the converted content to clipboard
-5. **Visual Feedback**: Provide feedback when content is successfully copied
+## Core Features (Original Intent)
 
-## Technical Requirements
+1. **Button Injection**: Add a Slack-branded button next to Perplexity.ai content.
+2. **Content Extraction**: Extract content from the Perplexity.ai DOM.
+3. **Format Conversion**: Convert extracted content to Slack's mrkdwn format.
+4. **Clipboard Integration**: Copy the converted content to clipboard.
+5. **Visual Feedback**: Provide feedback when content is successfully copied.
+
+## Technical Requirements (Historical Context)
 
 ### Dependencies
 
-- **slackify-markdown**: Primary library for converting markdown to Slack format
-- **Standard Chrome Extension APIs**: For DOM manipulation and clipboard access
+- **Standard Chrome Extension APIs**: For DOM manipulation and clipboard access. (Note: An earlier idea of using `slackify-markdown` was discarded).
 
-### File Structure
+### File Structure (Historical - See README.md for current structure)
 
+<!-- The file structure below is outdated. Refer to README.md -->
 ```
-markdown-to-slack/
-├── manifest.json           # Extension configuration
-├── background.js           # Background script for extension-wide functionality
-├── content.js              # Main content script for DOM manipulation
-├── lib/
-│   ├── extractor.js        # Logic to extract markdown from DOM
-│   ├── converter.js        # Conversion functionality using slackify-markdown
-│   └── clipboard.js        # Clipboard operations
+markdown-to-slack/ (Original Project Name)
+├── manifest.json
+├── background.js
+├── content.js
+├── lib/ (No longer used, logic integrated into content.js)
+│   ├── extractor.js
+│   ├── converter.js
+│   └── clipboard.js
 ├── assets/
-│   ├── icons/              # Extension icons
-│   └── slack-icon.svg      # Icon for the copy button
+│   ├── icons/
+│   └── slack-icon.svg (Now assets/icons/icon.svg)
 └── styles/
-    └── button.css          # CSS for the Slack button
+    └── button.css
 ```
 
-## DOM Update Instructions for Claude Code
+## General DOM Interaction Principles (for AI Agents)
 
-When working with the Perplexity.ai interface, you'll need to:
+When working with the Perplexity.ai interface, AI agents should aim to:
 
-1. Target the main response container with the class `border-borderMain/50` which contains the text response about supplements for a 50-year-old with high-normal blood pressure.
+1. **Identify Key Containers:** Accurately target main response containers and button toolbars. Class names and exact structures can change, so focus on semantic roles and relative positioning if possible.
+2. **Preserve Structure and Style:** When modifying or injecting content, strive to match existing font styles, layout properties (flex, grid), and dark/light mode conventions.
+3. **Maintain Functionality:** Be careful not to disrupt existing interactive elements or responsive layouts.
+4. **Focus States:** Ensure any new interactive elements have clear focus states for accessibility.
 
-2. Replace or modify content within the `<div class="relative font-sans text-base text-textMain dark:text-textMainDark">` element that contains the current text about supplement recommendations.
+The primary goal is to update content or add features while maintaining visual consistency and the existing functionality of the Perplexity interface.
 
-3. When updating buttons, work with elements inside the `<div class="buttons-container mt-2 flex items-center gap-2">` container.
+## Lessons Learned (Still Relevant)
 
-4. For any icons or SVG elements, note they use the attributes `aria-hidden="true"` and often have classes like `svg-inline--fa`.
+- Chrome extensions require careful handling of cross-origin permissions and content script limitations.
+- Browser clipboard APIs have specific security and permission constraints (e.g., `document.execCommand('copy')` is often more reliable in content scripts than `navigator.clipboard.writeText`).
+- User experience is critical - visual feedback and smooth interaction are key to extension usability.
+- Testing across different Perplexity page structures (if they vary) is essential for reliability.
+- Performance optimization can be important, especially for content extraction on complex pages.
+- DOM structure preservation is crucial - always aim to maintain the original document order when extracting content.
+- Content extraction regressions can occur when improving other features - test both UI and functionality after each change.
+- Overengineering content extraction can lead to unexpected behavior - simpler solutions are often more robust.
+- When content has a specific visual structure, preserving that structure in the extraction is as important as the content itself.
 
-5. Preserve the overall structure while modifying content, particularly maintaining:
-   - The flex layout properties
-   - Proper dark/light mode class alternations (classes with `dark:` prefixes)
-   - Interactive elements like the "Copy clean" button
-
-6. When injecting new content, match the existing font styles using classes like `font-sans`, `text-sm`, and appropriate text color classes.
-
-7. Be careful not to disrupt the responsive layout, which uses classes like `gap-y-sm`, `flex-col`, and various margin/padding utilities.
-
-8. For any new interactive elements, ensure proper focus states are defined with classes like `focus:outline-none` and `focus-visible:bg-offsetPlus`.
-
-The primary goal is to update the content while maintaining the visual consistency and functionality of the Perplexity interface.
-
-## Lessons Learned
-
-- Chrome extensions require careful handling of cross-origin permissions and content script limitations
-- Markdown conversion is nuanced and requires robust parsing of different markdown variants
-- Browser clipboard APIs have specific security and permission constraints
-- User experience is critical - visual feedback and smooth interaction are key to extension usability
-- Testing across different websites and markdown implementations is essential for reliability
-- Performance optimization is important, especially for content extraction and conversion
-- DOM structure preservation is crucial - always maintain the original document order when extracting content
-- Content extraction regression can occur when improving other features - test both UI and functionality after each change
-- Overengineering content extraction can lead to unexpected behavior - simpler solutions are often more robust
-- When content has a specific visual structure, preserving that structure in the extraction is as important as the content itself
-
-## DOM Content Extraction Lessons
-
-The "content extraction regression" taught us several valuable lessons:
+## DOM Content Extraction Lessons (Still Relevant)
 
 1. **Preserve Original Document Structure**: When extracting content from DOM, always maintain the original document order. Processing different element types (lists, paragraphs, headings) in a fixed order rather than their document order can rearrange content unintentionally.
-
 2. **Use Document Order Traversal**: Gather all content nodes first in document order before processing them, rather than processing by element type.
+3. **Maintain Context**: Bold, italic, and other formatting should be preserved within their original context, not extracted and processed separately.
+4. **Punctuation and Spacing**: When removing citations or cleaning up text, be careful to preserve proper spacing around punctuation. Always ensure there's a space after periods, commas, and other punctuation marks, but not before them.
+5. **Multiple Cleanup Passes**: For complex text processing, sometimes multiple passes are needed - first to clean citations, then to ensure proper spacing. Adding a final pass to standardize spacing helps ensure consistent output.
 
-3. **Content Maps for Complex Processing**: When multiple transformations are needed, use a map to track processed content while preserving relationships between elements.
+## Architectural Principles (General Goals - See README.md for current implementation)
 
-4. **Test Real-world Content**: Always test extraction with a variety of real content structures from the target site, not just the basic cases.
+These were guiding principles for a robust architecture:
 
-5. **Maintain Context**: Bold, italic, and other formatting should be preserved within their original context, not extracted and processed separately.
-
-6. **Punctuation and Spacing**: When removing citations or cleaning up text, be careful to preserve proper spacing around punctuation. Always ensure there's a space after periods, commas, and other punctuation marks, but not before them.
-
-7. **Multiple Cleanup Passes**: For complex text processing, sometimes multiple passes are needed - first to clean citations, then to ensure proper spacing. Adding a final pass to standardize spacing helps ensure consistent output.
-
-## New Architecture
-
-After encountering numerous issues with our initial approach, we've completely redesigned the content extraction pipeline with a more robust architecture:
-
-1. **Separation of Concerns**: Organized functionality into logical sections:
-   - Content extraction - Handles DOM parsing and citation removal
-   - Formatting - Converts content to Slack's mrkdwn format
-   - Clipboard operations - Manages copying to clipboard
-   
+1. **Separation of Concerns**: Aim to organize functionality into logical sections (e.g., content extraction, formatting, clipboard operations), even if currently co-located in `content.js` for extension simplicity.
 2. **Sequential Processing Pipeline**:
    - Remove citation elements from DOM
    - Extract text in document order
    - Apply formatting for Slack
    - Copy to clipboard
-   
-3. **Test-Driven Development**:
-   - Comprehensive test suite for extraction and formatting
-   - Tests cover real-world examples and edge cases
-   - Separate validation for each transformation step
-   
+3. **Test-Driven Development (Aspirational)**:
+   - Aim for a comprehensive test suite for extraction and formatting.
+   - Tests should cover real-world examples and edge cases.
 4. **Reduced Complexity**:
-   - Simpler, focused functions with clear responsibilities
-   - Proper error handling
-   - Consistent organization
-   
+   - Strive for simpler, focused functions with clear responsibilities.
+   - Implement proper error handling.
 5. **Browser Compatibility**:
-   - Self-contained approach for Chrome extension compatibility
-   - No external dependencies in runtime code
-   - No Node.js-style imports that aren't supported in extensions
+   - Maintain a self-contained approach for Chrome extension compatibility.
+   - Avoid Node.js-style imports not supported in extensions.
 
-## Development Workflow and Build Process
+## Development Workflow and Build Process (Historical - See README.md for current process)
 
 ### Build Instructions
 
 1. **Development Setup**:
-   - Run `npm install` to install all dependencies
-   - Run `npm run generate-icons` if icon changes are needed
+   - Run `npm install` to install all dependencies (if any beyond devDependencies for linting/future testing).
+   - Run `npm run generate-icons` if icon changes are needed.
 
 2. **Building the Extension**:
-   - Run `./build.sh` to create a distribution package
-   - This script will:
-     - Clean any existing build directories
-     - Create a temporary build directory
-     - Copy necessary files (manifest.json, JS files, styles, icons)
-     - Create a zip file in the `dist` directory
-     - Clean up the temporary directory
+   - Run `./build.sh` to create a distribution package.
 
-3. **Testing**:
-   - Run `node tests/run-tests.js` to execute all test suites
-   - Tests cover content extraction, formatting, and citation handling
+3. **Testing (Historical - See README.md for current process)**:
+   - Earlier ideas involved `node tests/run-tests.js` for specific unit tests.
 
 4. **Installation for Testing**:
    - Open Chrome and navigate to `chrome://extensions/`
-   - Enable "Developer mode" in the top-right corner
-   - Click "Load unpacked" and select the project directory
-   - Alternatively, drag the zip file from `dist/` onto the extensions page
+   - Enable "Developer mode".
+   - Click "Load unpacked" and select the project directory, or drag the `dist/perplexity2slack.zip` file.
 
-### Development Workflow Reminders
+## AI Collaboration Reminders (General Advice)
 
-- Make sure that all changes result in updates to the extension for testing when the task is complete. Don't wait for me to ask you to build.
-- After fixing any content extraction issues, test with a variety of content types to ensure the fix is robust
-- Always test dark mode alongside light mode to ensure proper rendering in both contexts
-- Run the test suite after any changes to verify functionality
-- Test the actual extension in Chrome to verify the user experience
+- Ensure all functional changes result in a buildable and testable extension state.
+- After fixing any content extraction issues, test with a variety of content types to ensure the fix is robust.
+- Always test dark mode alongside light mode to ensure proper rendering in both contexts.
+- If automated tests are (re-)introduced, run them after any changes to verify functionality.
+- Always test the actual extension in Chrome to verify the user experience.

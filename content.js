@@ -10,7 +10,7 @@
  */
 function extractContent(element) {
   if (!element) return '';
-  
+
   console.log('Extracting content from:', element);
 
   // Clone the element to avoid modifying the original
@@ -85,19 +85,19 @@ function extractStructuredText(element) {
           if (strongEls.length > 0) {
             // Make a copy of the text to work with
             let formattedText = itemText;
-            
+
             // Process each bold element
             Array.from(strongEls).forEach(strongEl => {
               const strongText = strongEl.textContent.trim();
               // Only replace if not already formatted and if the text exists in our processed text
               if (strongText && formattedText.includes(strongText)) {
                 formattedText = formattedText.replace(
-                  strongText, 
+                  strongText,
                   `*${strongText}*`
                 );
               }
             });
-            
+
             result += `• ${formattedText}\n`;
           } else {
             result += `• ${itemText}\n`;
@@ -157,19 +157,19 @@ function extractStructuredText(element) {
         if (strongEls.length > 0) {
           // Make a copy of the text to work with
           let formattedText = elementText;
-          
+
           // Process each bold element
           Array.from(strongEls).forEach(strongEl => {
             const strongText = strongEl.textContent.trim();
             // Only replace if not already formatted and if the text exists in our processed text
             if (strongText && formattedText.includes(strongText)) {
               formattedText = formattedText.replace(
-                strongText, 
+                strongText,
                 `*${strongText}*`
               );
             }
           });
-          
+
           result += formattedText + '\n\n';
         } else {
           result += elementText + '\n\n';
@@ -199,26 +199,26 @@ function extractStructuredText(element) {
 function cleanTextContent(text) {
   // Direct citation removal - completely eliminate bracketed citations
   let cleaned = text;
-  
+
   // Remove citation patterns like [1], [2], [10], etc.
   cleaned = cleaned.replace(/\s?\[\d+\]\s?/g, ' ');
-  
+
   // Handle consecutive citations like [1][2][3]
   cleaned = cleaned.replace(/\s?\[\d+\](?:\[\d+\])+\s?/g, ' ');
-  
+
   // Fix any remaining citation formats like [ 1 ] with spaces inside
   cleaned = cleaned.replace(/\s?\[\s*\d+\s*\]\s?/g, ' ');
-  
+
   // Remove unbracketed citations at end of sentences
   cleaned = cleaned.replace(/\s?\d+(?:\d+)*\s?(?=\.|,|;|$)/g, '');
-  
+
   // Fix spacing issues (double spaces, etc.)
   cleaned = cleaned.replace(/\s{2,}/g, ' ');
-  
+
   // Fix spacing around punctuation
   cleaned = cleaned.replace(/\s+([.,;:!?])/g, '$1');
   cleaned = cleaned.replace(/([.,;:!?])(?![\s\n]|$)/g, '$1 ');
-  
+
   return cleaned.trim();
 }
 
@@ -234,7 +234,7 @@ function formatForSlack(text) {
 
   // Handle markdown headers (# Heading -> *Heading*)
   let formatted = text.replace(/^#\s+(.*?)$/gm, '*$1*');
-  
+
   // Handle multi-level markdown headers (## Heading -> *Heading*)
   formatted = formatted.replace(/^#{2,6}\s+(.*?)$/gm, '*$1*');
 
@@ -284,11 +284,11 @@ function formatForSlack(text) {
 async function copyToClipboard(text) {
   // Log the text we're trying to copy (for debugging)
   console.log('Attempting to copy text:', text.substring(0, 50) + '...');
-  
+
   // Use a simple method for copying text
   const textArea = document.createElement('textarea');
   textArea.value = text;
-  
+
   // Position off-screen but make sure it's visible and selectable
   textArea.style.position = 'fixed';
   textArea.style.top = '10px';
@@ -297,16 +297,16 @@ async function copyToClipboard(text) {
   textArea.style.height = '2em';
   textArea.style.opacity = '0';
   textArea.style.zIndex = '-1';
-  
+
   // Add to DOM
   document.body.appendChild(textArea);
-  
+
   try {
     // Select and copy
     textArea.select();
     const success = document.execCommand('copy');
     console.log('Copy result:', success);
-    
+
     if (!success) {
       // If execCommand fails, try clipboard API as backup
       if (navigator.clipboard) {
@@ -321,7 +321,7 @@ async function copyToClipboard(text) {
     } else {
       return true;
     }
-    
+
     return success;
   } catch (err) {
     console.error('Copy failed:', err);
@@ -336,7 +336,7 @@ async function copyToClipboard(text) {
 
 // Get Slack icon SVG
 function getSlackIconSVG() {
-  return `<svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  return `<svg class="slack-icon" width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
     <path d="M6.194 14.644c0 1.16-.943 2.107-2.103 2.107-1.16 0-2.103-.946-2.103-2.107 0-1.16.943-2.106 2.103-2.106h2.103v2.106zm1.061 0c0-1.16.943-2.106 2.103-2.106 1.16 0 2.103.946 2.103 2.106v5.274c0 1.16-.943 2.107-2.103 2.107-1.16 0-2.103-.946-2.103-2.107v-5.274z" fill="#E01E5A"/>
     <path d="M9.358 6.161c-1.16 0-2.103-.946-2.103-2.106 0-1.16.943-2.107 2.103-2.107 1.16 0 2.103.946 2.103 2.107v2.106H9.358zm0 1.06c1.16 0 2.103.946 2.103 2.107 0 1.16-.943 2.107-2.103 2.107H4.09c-1.16 0-2.103-.946-2.103-2.107 0-1.16.943-2.106 2.103-2.106h5.27z" fill="#36C5F0"/>
     <path d="M17.81 9.328c0-1.16.943-2.106 2.103-2.106 1.16 0 2.103.946 2.103 2.106 0 1.16-.943 2.107-2.103 2.107h-2.103V9.328zm-1.062 0c0 1.16-.943 2.107-2.103 2.107-1.16 0-2.103-.946-2.103-2.107V4.054c0-1.16.943-2.107 2.103-2.107 1.16 0 2.103.946 2.103 2.107v5.274z" fill="#2EB67D"/>
@@ -344,23 +344,50 @@ function getSlackIconSVG() {
   </svg>`;
 }
 
-// Show feedback on the button after clicking
-function showFeedback(button, type) {
-  const originalTitle = button.title;
-  button.classList.add(type);
-  button.classList.add('active');
+// Get check mark SVG for success state - Updated to match Perplexity's style
+function getCheckMarkSVG() {
+  return `<svg class="checkmark tabler-icon tabler-icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M5 12l5 5l10 -10"></path>
+  </svg>`;
+}
 
-  if (type === 'success') {
-    button.title = 'Copied to clipboard!';
-  } else {
-    button.title = 'Failed to copy';
+/**
+ * Show feedback when a button is clicked
+ * @param {HTMLElement} button - The button element
+ * @param {string} type - The feedback type ('success' or 'error')
+ */
+function showFeedback(button, type) {
+  // Clear previous classes and timeouts
+  button.classList.remove('active', 'success', 'error');
+
+  if (button._feedbackTimeout) {
+    clearTimeout(button._feedbackTimeout);
+    button._feedbackTimeout = null;
   }
 
-  // Reset after animation
-  setTimeout(() => {
-    button.classList.remove(type);
-    button.classList.remove('active');
-    button.title = originalTitle;
+  // Add appropriate class based on type
+  button.classList.add('active', type);
+
+  // Show appropriate tooltip message
+  const tooltipElement = button.parentNode.querySelector('.slack-button-tooltip');
+  if (tooltipElement) {
+    if (type === 'success') {
+      tooltipElement.textContent = 'Copied!';
+      tooltipElement.style.opacity = '1';
+    } else if (type === 'error') {
+      tooltipElement.textContent = 'Failed to copy';
+      tooltipElement.style.opacity = '1';
+    }
+  }
+
+  // Reset after delay
+  button._feedbackTimeout = setTimeout(() => {
+    button.classList.remove('active', 'success', 'error');
+    if (tooltipElement) {
+      tooltipElement.textContent = 'Copy for Slack';
+      tooltipElement.style.opacity = '';
+    }
+    button._feedbackTimeout = null;
   }, 2000);
 }
 
@@ -392,7 +419,7 @@ function findPerplexityResponses() {
       // Find the parent response container
       const responseSelectors = '.border-borderMain\\/50, .answer-container, .response-container, [data-answer-id], [role="article"], .answer';
       const responseContainer = toolbar.closest(responseSelectors);
-      
+
       if (responseContainer && !responseContainers.includes(responseContainer)) {
         console.log('Found response container:', responseContainer);
         responseContainers.push(responseContainer);
@@ -414,7 +441,10 @@ function findPerplexityResponses() {
   return responseContainers;
 }
 
-// Create and add the Slack copy button
+/**
+ * Add a Slack copy button to a response element
+ * @param {HTMLElement} responseElement - The response element to add a button to
+ */
 function addSlackButton(responseElement) {
   // Check if we already added a button to this element
   if (responseElement.querySelector('.slack-copy-button')) return;
@@ -442,7 +472,7 @@ function addSlackButton(responseElement) {
   // Find the menu button ("...") to position our button before it
   const menuButtons = Array.from(toolbar.querySelectorAll('button'));
   const menuButtonIndex = menuButtons.findIndex(btn =>
-    btn.querySelector('svg.tabler-icon-dots-vertical') ||
+    btn.querySelector('svg.tabler-icon-dots') ||
     btn.getAttribute('aria-label')?.includes('More')
   );
 
@@ -455,22 +485,29 @@ function addSlackButton(responseElement) {
   const buttonContainer = document.createElement('div');
   buttonContainer.className = 'slack-button-container';
 
+  // Create the tooltip
+  const tooltip = document.createElement('span');
+  tooltip.className = 'slack-button-tooltip';
+  tooltip.textContent = 'Copy for Slack';
+  buttonContainer.appendChild(tooltip);
+
   // Create the button
   const button = document.createElement('button');
-  button.className = 'slack-copy-button';
+  button.className = 'slack-copy-button focus-visible:bg-offsetPlus dark:focus-visible:bg-offsetPlusDark hover:bg-offsetPlus text-textOff dark:text-textOffDark hover:text-textMain dark:hover:bg-offsetPlusDark dark:hover:text-textMainDark';
   button.title = 'Copy for Slack';
   button.setAttribute('aria-label', 'Copy for Slack');
-  button.innerHTML = getSlackIconSVG();
+  button.setAttribute('type', 'button');
+  button.innerHTML = getSlackIconSVG() + getCheckMarkSVG();
 
-  // Add click handler
+  // Add click event to the button
   button.addEventListener('click', async () => {
     try {
       // Get all text from the response element
       console.log('Response element:', responseElement);
-      
+
       // Enhanced content extraction
       let extractedContent = '';
-      
+
       try {
         // First check if we can find a specific container with the main content
         const possibleContainers = [
@@ -478,10 +515,10 @@ function addSlackButton(responseElement) {
           responseElement.querySelector('[data-testid="answer-body"]'),
           responseElement.querySelector('[role="article"]')
         ];
-        
+
         const contentContainer = possibleContainers.find(el => el) || responseElement;
         console.log('Using content container:', contentContainer);
-        
+
         // Remove citation section if present
         // Need to search for text content with "Citations:" since we can't use :contains
         const allDivs = contentContainer.querySelectorAll('div');
@@ -492,34 +529,41 @@ function addSlackButton(responseElement) {
             break;
           }
         }
-        
+
         if (citationSection) {
           console.log('Found citation section, removing');
           citationSection.remove();
         }
-        
+
         // Get all significant elements in order
         const allElements = contentContainer.querySelectorAll('p, h1, h2, h3, h4, h5, h6, ul, ol, li');
         console.log('Found elements:', allElements.length);
-        
+
         // Process elements
         const processedContent = [];
         const processedTexts = new Set(); // Avoid duplicates
-        
+
         for (const el of allElements) {
           // Skip if this is a list item that will be processed with its parent list
           if (el.tagName === 'LI' && (el.parentElement.tagName === 'UL' || el.parentElement.tagName === 'OL')) {
             continue;
           }
-          
+
           // Clean text content
-          let text = cleanTextContent(el.textContent);
-          
+          let text = el.textContent
+            // Remove citation references [1], [2], etc.
+            .replace(/\s?\[\d+\](?:\[\d+\])*\s?/g, ' ')
+            // Remove other citation format
+            .replace(/\[\s*\d+\s*\]/g, '')
+            // Remove unbracketed citations at end
+            .replace(/\s\d+(?:\s\d+)*\s?(?=\.|,|;|$)/g, '')
+            .trim();
+
           // Skip empty or already processed content
           if (!text || processedTexts.has(text.toLowerCase())) {
             continue;
           }
-          
+
           // Format based on element type
           if (el.tagName.match(/^H[1-6]$/)) {
             // Headings become bold
@@ -529,8 +573,12 @@ function addSlackButton(responseElement) {
             // Process list items
             const items = Array.from(el.querySelectorAll('li'));
             for (const item of items) {
-              const itemText = cleanTextContent(item.textContent);
-                
+              const itemText = item.textContent
+                .replace(/\s?\[\d+\](?:\[\d+\])*\s?/g, ' ')
+                .replace(/\[\s*\d+\s*\]/g, '')
+                .replace(/\s\d+(?:\s\d+)*\s?(?=\.|,|;|$)/g, '')
+                .trim();
+
               if (itemText && !processedTexts.has(itemText.toLowerCase())) {
                 processedContent.push(`• ${itemText}`);
                 processedTexts.add(itemText.toLowerCase());
@@ -542,46 +590,56 @@ function addSlackButton(responseElement) {
             // Regular paragraphs
             processedContent.push(`${text}\n`);
           }
-          
+
           processedTexts.add(text.toLowerCase());
         }
-        
+
         // Join all processed content
         extractedContent = processedContent.join('\n');
-        
+
         // If we somehow got no content, fall back to simple text extraction
         if (!extractedContent.trim()) {
           console.log('No structured content found, falling back to text extraction');
           extractedContent = contentContainer.textContent || '';
-          
+
           // Clean up the fallback text
-          extractedContent = cleanTextContent(extractedContent);
+          extractedContent = extractedContent
+            .replace(/\s?\[\d+\](?:\[\d+\])*\s?/g, ' ')
+            .replace(/\[\s*\d+\s*\]/g, '')
+            .replace(/\s\d+(?:\s\d+)*\s?(?=\.|,|;|$)/g, '')
+            .replace(/\s{2,}/g, ' ')
+            .trim();
         }
-        
+
         console.log('Extracted content length:', extractedContent.length);
         console.log('Sample:', extractedContent.substring(0, 100) + '...');
       } catch (extractError) {
         console.error('Error extracting content:', extractError);
         // Fallback to simple text extraction
         extractedContent = responseElement.textContent || '';
-        
+
         // Clean up the fallback text
-        extractedContent = cleanTextContent(extractedContent);
+        extractedContent = extractedContent
+          .replace(/\s?\[\d+\](?:\[\d+\])*\s?/g, ' ')
+          .replace(/\[\s*\d+\s*\]/g, '')
+          .replace(/\s\d+(?:\s\d+)*\s?(?=\.|,|;|$)/g, '')
+          .replace(/\s{2,}/g, ' ')
+          .trim();
       }
-      
+
       // Format for Slack - simple formatting
       const slackContent = extractedContent
         // Convert markdown bold to Slack bold
         .replace(/\*\*([^*]+?)\*\*/g, '*$1*')
         // Format bullet points
         .replace(/^[-*]\s+(.*)$/gm, '• $1');
-      
+
       // Try to copy the content
       console.log('Attempting to copy extracted content');
       const success = await copyToClipboard(slackContent);
-      
+
       console.log('Copy success:', success);
-      
+
       // Show feedback
       showFeedback(button, success ? 'success' : 'error');
     } catch (error) {
@@ -590,7 +648,7 @@ function addSlackButton(responseElement) {
     }
   });
 
-  // Add button to container
+  // Add the button to the container
   buttonContainer.appendChild(button);
 
   // Insert the button in the right position
