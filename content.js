@@ -80,12 +80,25 @@ function extractStructuredText(element) {
       items.forEach(item => {
         const itemText = cleanTextContent(item.textContent);
         if (!processedContent.has(itemText.toLowerCase())) {
-          // Find any strong/bold elements and format them properly
-          const strongEl = item.querySelector('strong');
-          if (strongEl) {
-            const strongText = strongEl.textContent.trim();
-            const restText = itemText.replace(strongText, '').trim();
-            result += `• *${strongText}*${restText}\n`;
+          // Find ALL strong/bold elements and format them properly
+          const strongEls = item.querySelectorAll('strong, b');
+          if (strongEls.length > 0) {
+            // Make a copy of the text to work with
+            let formattedText = itemText;
+            
+            // Process each bold element
+            Array.from(strongEls).forEach(strongEl => {
+              const strongText = strongEl.textContent.trim();
+              // Only replace if not already formatted and if the text exists in our processed text
+              if (strongText && formattedText.includes(strongText)) {
+                formattedText = formattedText.replace(
+                  strongText, 
+                  `*${strongText}*`
+                );
+              }
+            });
+            
+            result += `• ${formattedText}\n`;
           } else {
             result += `• ${itemText}\n`;
           }
@@ -108,6 +121,7 @@ function extractStructuredText(element) {
     if (el.tagName.match(/^H[1-6]$/) || (el.tagName === 'STRONG' && el.parentElement.tagName === 'DIV')) {
       // Headings and standalone strong elements become bold in Slack
       if (!processedContent.has(elementText.toLowerCase())) {
+        // Headers get bold and double newline for spacing
         result += `*${elementText}*\n\n`;
         processedContent.add(elementText.toLowerCase());
       }
@@ -138,11 +152,25 @@ function extractStructuredText(element) {
       }
 
       if (!isDuplicate) {
-        // Look for strong/bold elements
-        const strongEl = el.querySelector('strong');
-        if (strongEl) {
-          const strongText = strongEl.textContent.trim();
-          result += `*${strongText}*${elementText.replace(strongText, '')}\n\n`;
+        // Look for ALL strong/bold elements in the paragraph
+        const strongEls = el.querySelectorAll('strong, b');
+        if (strongEls.length > 0) {
+          // Make a copy of the text to work with
+          let formattedText = elementText;
+          
+          // Process each bold element
+          Array.from(strongEls).forEach(strongEl => {
+            const strongText = strongEl.textContent.trim();
+            // Only replace if not already formatted and if the text exists in our processed text
+            if (strongText && formattedText.includes(strongText)) {
+              formattedText = formattedText.replace(
+                strongText, 
+                `*${strongText}*`
+              );
+            }
+          });
+          
+          result += formattedText + '\n\n';
         } else {
           result += elementText + '\n\n';
         }
