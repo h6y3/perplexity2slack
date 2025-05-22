@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "Perplexity to Slack",
+  "version": "1.0.0",
+  "description": "Copy content from Perplexity.ai in Slack-compatible markdown format",
+  "permissions": ["activeTab", "clipboardWrite", "contextMenus"],
+  "host_permissions": ["*://www.perplexity.ai/*"],
+  "content_scripts": [
+    {
+      "matches": ["*://www.perplexity.ai/*"],
+      "js": ["content.js"],
+      "css": ["styles/button.css"]
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_icon": {
+      "16": "assets/icons/icon16.png",
+      "48": "assets/icons/icon48.png",
+      "128": "assets/icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "assets/icons/icon16.png",
+    "48": "assets/icons/icon48.png",
+    "128": "assets/icons/icon128.png"
+  }
+}
