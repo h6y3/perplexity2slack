@@ -198,10 +198,12 @@ function extractStructuredText(element) {
  */
 function cleanTextContent(text) {
   return text
-    // Remove citation references [1], [2], etc.
+    // Remove citation references with brackets [1], [2], etc.
     .replace(/\s?\[\d+\](?:\[\d+\])*\s?/g, ' ')
     // Remove other citation format [1]
     .replace(/\[\s*\d+\s*\]/g, '')
+    // Remove numbers that appear to be citations (likely from Perplexity)
+    .replace(/\s\d{1,3}(?!\d)/g, ' ')
     // Remove unbracketed citations at end of sentences
     .replace(/\s?\d+(?:\d+)*\s?(?=\.|,|;|$)/g, '')
     // Fix spacing before punctuation (remove extra spaces)
@@ -223,8 +225,11 @@ function cleanTextContent(text) {
 function formatForSlack(text) {
   if (!text) return '';
 
-  // Handle headings (# Heading -> *Heading*)
+  // Handle markdown headers (# Heading -> *Heading*)
   let formatted = text.replace(/^#\s+(.*?)$/gm, '*$1*');
+  
+  // Handle multi-level markdown headers (## Heading -> *Heading*)
+  formatted = formatted.replace(/^#{2,6}\s+(.*?)$/gm, '*$1*');
 
   // Convert standard markdown bold to Slack bold
   formatted = formatted.replace(/\*\*([^*]+?)\*\*/g, '*$1*');
@@ -506,6 +511,8 @@ function addSlackButton(responseElement) {
             .replace(/\s?\[\d+\](?:\[\d+\])*\s?/g, ' ')
             // Remove other citation format
             .replace(/\[\s*\d+\s*\]/g, '')
+            // Remove numbers that appear to be citations (likely from Perplexity)
+            .replace(/\s\d{1,3}(?!\d)/g, ' ')
             // Remove unbracketed citations at end
             .replace(/\s\d+(?:\s\d+)*\s?(?=\.|,|;|$)/g, '')
             .trim();
@@ -527,6 +534,7 @@ function addSlackButton(responseElement) {
               const itemText = item.textContent
                 .replace(/\s?\[\d+\](?:\[\d+\])*\s?/g, ' ')
                 .replace(/\[\s*\d+\s*\]/g, '')
+                .replace(/\s\d{1,3}(?!\d)/g, ' ')
                 .replace(/\s\d+(?:\s\d+)*\s?(?=\.|,|;|$)/g, '')
                 .trim();
                 
