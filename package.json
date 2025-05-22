@@ -16,8 +16,8 @@
     "markdown",
     "chrome-extension"
   ],
-  "author": "",
-  "license": "ISC",
+  "author": "Han Yuan",
+  "license": "MIT",
   "dependencies": {
     "slackify-markdown": "^4.4.0"
   },
