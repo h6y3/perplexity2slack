@@ -19,13 +19,32 @@ A Chrome Extension that adds a "Copy for Slack" button to Perplexity.ai pages. W
 
 ### From Source
 
-1. Clone this repository
-2. Run `npm install` to install dependencies
-3. Run `npm run generate-icons` to generate icons (if needed)
-4. Run `./build.sh` to create a zip file in the `dist` directory
-5. In Chrome, go to `chrome://extensions/`
-6. Enable "Developer mode"
-7. Click "Load unpacked" and select the `dist` directory or drag the zip file onto the extensions page
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/h6y3/perplexity2slack.git
+   cd perplexity2slack
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Build the extension:
+   ```bash
+   # Generate icons if needed
+   npm run generate-icons
+   
+   # Build the extension package
+   ./build.sh
+   ```
+
+4. Install in Chrome:
+   - Navigate to `chrome://extensions/`
+   - Enable "Developer mode" in the top-right corner
+   - Either:
+     - Click "Load unpacked" and select the project directory
+     - Drag the zip file from `dist/perplexity2slack.zip` onto the extensions page
 
 ## Development
 
@@ -51,11 +70,30 @@ perplexity2slack/
     └── run-tests.js        # Test runner
 ```
 
-### Build Process
+### Build and Test Process
 
-- `npm run generate-icons` - Generates PNG icons from SVG source
-- `./build.sh` - Creates a ZIP file for distribution
-- `node tests/run-tests.js` - Run all tests
+```bash
+# Install dependencies
+npm install
+
+# Generate icons from SVG source (if needed)
+npm run generate-icons
+
+# Run tests
+npm test
+# Or directly with:
+node tests/run-tests.js
+
+# Build the extension package
+./build.sh
+```
+
+The build script (`build.sh`) performs the following steps:
+1. Cleans any existing build directories
+2. Creates a temporary build directory
+3. Copies necessary files (manifest.json, JS files, styles, icons)
+4. Creates a zip file in the `dist` directory
+5. Cleans up the temporary directory
 
 ### Key Features
 

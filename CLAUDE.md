@@ -123,8 +123,37 @@ After encountering numerous issues with our initial approach, we've completely r
    - No external dependencies in runtime code
    - No Node.js-style imports that aren't supported in extensions
 
-## Development Workflow Reminder
+## Development Workflow and Build Process
+
+### Build Instructions
+
+1. **Development Setup**:
+   - Run `npm install` to install all dependencies
+   - Run `npm run generate-icons` if icon changes are needed
+
+2. **Building the Extension**:
+   - Run `./build.sh` to create a distribution package
+   - This script will:
+     - Clean any existing build directories
+     - Create a temporary build directory
+     - Copy necessary files (manifest.json, JS files, styles, icons)
+     - Create a zip file in the `dist` directory
+     - Clean up the temporary directory
+
+3. **Testing**:
+   - Run `node tests/run-tests.js` to execute all test suites
+   - Tests cover content extraction, formatting, and citation handling
+
+4. **Installation for Testing**:
+   - Open Chrome and navigate to `chrome://extensions/`
+   - Enable "Developer mode" in the top-right corner
+   - Click "Load unpacked" and select the project directory
+   - Alternatively, drag the zip file from `dist/` onto the extensions page
+
+### Development Workflow Reminders
 
 - Make sure that all changes result in updates to the extension for testing when the task is complete. Don't wait for me to ask you to build.
 - After fixing any content extraction issues, test with a variety of content types to ensure the fix is robust
 - Always test dark mode alongside light mode to ensure proper rendering in both contexts
+- Run the test suite after any changes to verify functionality
+- Test the actual extension in Chrome to verify the user experience
