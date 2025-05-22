@@ -42,6 +42,22 @@ A Chrome Extension that adds a "Copy for Slack" button to Perplexity.ai, letting
 
 ---
 
+## Enabling Slack Markdown Formatting
+
+Slack uses its own markdown-like syntax (called "mrkdwn") for formatting messages.
+To ensure your pasted content appears correctly:
+
+- **Basic formatting** (bold, italics, lists, links) is enabled by default in all Slack messages.
+- **Code blocks:** Use triple backticks (```) before and after your code, or use the code button in the message toolbar.
+- **Advanced formatting:**
+  - Go to **Preferences > Advanced** in Slack.
+  - Make sure "Format messages with markup" is enabled.
+- If you paste content and it doesn't look right, try pasting into a new message or check your Slack settings.
+
+For more details, see [Slack's formatting guide](https://slack.com/help/articles/202288908-Format-your-messages).
+
+---
+
 ## How it Works
 
 **1. Click the Slack button on Perplexity.ai:**
