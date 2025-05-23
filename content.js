@@ -34,10 +34,20 @@ function removeCitationElements(element) {
   );
   citationSections.forEach(section => section.remove());
 
-  // Remove individual citation elements
+  // Remove individual citation elements - updated selectors for Perplexity's structure
   element.querySelectorAll(
-    '[data-citation], .citation, .citation.ml-xs.inline, a[href^="#cite"]'
+    '[data-citation], .citation, a.citation, a[href^="#cite"], a[class*="citation"]'
   ).forEach(el => el.remove());
+
+  // Also remove span elements that wrap citations
+  element.querySelectorAll('span.whitespace-nowrap').forEach(span => {
+    if (span.querySelector('a[class*="citation"]')) {
+      span.remove();
+    }
+  });
+
+  // Remove any remaining citation link elements
+  element.querySelectorAll('a[rel*="nofollow"][class*="citation"]').forEach(el => el.remove());
 }
 
 /**
@@ -210,7 +220,7 @@ function cleanTextContent(text) {
   cleaned = cleaned.replace(/\s?\[\s*\d+\s*\]\s?/g, ' ');
 
   // Remove unbracketed citations at end of sentences
-  cleaned = cleaned.replace(/\s?\d+(?:\d+)*\s?(?=\.|,|;|$)/g, '');
+  cleaned = cleaned.replace(/\s?\d+\s?(?=\.|,|;|$|")/g, '');
 
   // Fix spacing issues (double spaces, etc.)
   cleaned = cleaned.replace(/\s{2,}/g, ' ');
@@ -556,7 +566,7 @@ function addSlackButton(responseElement) {
             // Remove other citation format
             .replace(/\[\s*\d+\s*\]/g, '')
             // Remove unbracketed citations at end
-            .replace(/\s\d+(?:\s\d+)*\s?(?=\.|,|;|$)/g, '')
+            .replace(/\s?\d+\s?(?=\.|,|;|$|")/g, '')
             .trim();
 
           // Skip empty or already processed content
@@ -576,7 +586,7 @@ function addSlackButton(responseElement) {
               const itemText = item.textContent
                 .replace(/\s?\[\d+\](?:\[\d+\])*\s?/g, ' ')
                 .replace(/\[\s*\d+\s*\]/g, '')
-                .replace(/\s\d+(?:\s\d+)*\s?(?=\.|,|;|$)/g, '')
+                .replace(/\s?\d+\s?(?=\.|,|;|$|")/g, '')
                 .trim();
 
               if (itemText && !processedTexts.has(itemText.toLowerCase())) {
@@ -606,7 +616,7 @@ function addSlackButton(responseElement) {
           extractedContent = extractedContent
             .replace(/\s?\[\d+\](?:\[\d+\])*\s?/g, ' ')
             .replace(/\[\s*\d+\s*\]/g, '')
-            .replace(/\s\d+(?:\s\d+)*\s?(?=\.|,|;|$)/g, '')
+            .replace(/\s?\d+\s?(?=\.|,|;|$|")/g, '')
             .replace(/\s{2,}/g, ' ')
             .trim();
         }
@@ -622,7 +632,7 @@ function addSlackButton(responseElement) {
         extractedContent = extractedContent
           .replace(/\s?\[\d+\](?:\[\d+\])*\s?/g, ' ')
           .replace(/\[\s*\d+\s*\]/g, '')
-          .replace(/\s\d+(?:\s\d+)*\s?(?=\.|,|;|$)/g, '')
+          .replace(/\s?\d+\s?(?=\.|,|;|$|")/g, '')
           .replace(/\s{2,}/g, ' ')
           .trim();
       }

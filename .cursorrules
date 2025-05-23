@@ -1,0 +1,32 @@
+# Content Extraction & Text Processing Rules
+
+## Regex Pattern Development
+- Always test regex patterns against real example data before implementing
+- Use `node -e "..."` or similar tools to validate patterns against actual problem cases
+- Make spacing patterns flexible with `\s?` (optional) rather than `\s` (required) unless you've verified spacing is consistent
+- When the same text cleaning logic appears in multiple places, ensure identical patterns across all instances
+- Extract common text cleaning into shared functions rather than duplicating regex patterns
+
+## CSS Selector Robustness
+- Use partial matching (`[class*="value"]`) for class names that might have additional CSS classes
+- Inspect actual DOM structure in browser dev tools before writing selectors, don't assume based on documentation
+- Consider wrapper elements and nested structures that might also need to be targeted
+- Test selectors against the messiest real-world examples, not clean test cases
+
+## Content Processing Consistency
+- When fixing text processing bugs, search for ALL instances of similar patterns in the codebase
+- A single inconsistent pattern can break the entire cleaning process
+- Maintain identical regex patterns across similar operations (extraction, fallback processing, etc.)
+
+## Debugging Methodology
+- Start debugging by inspecting actual problematic content (HTML, text samples)
+- Make minimal, targeted changes rather than comprehensive rewrites
+- Test each change immediately rather than batching multiple fixes
+- Use real failing test cases from production content, not synthetic examples
+- When text processing fails, check both DOM element removal AND text pattern matching
+
+## Edge Case Handling
+- Test text processing against edge cases like missing spaces (`"text"1.` vs `"text" 1.`)
+- Consider punctuation adjacency in cleaning patterns
+- Account for various quote types and special characters in lookahead/lookbehind patterns
+- Always test against the messiest, most complex real-world examples available 
