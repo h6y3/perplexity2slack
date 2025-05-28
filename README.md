@@ -16,6 +16,9 @@ A Chrome Extension that adds a "Copy for Slack" button to Perplexity.ai, letting
 ---
 
 ## Installation
+### From Chrome Web Store
+
+- [Perplexity to Slack](https://chromewebstore.google.com/detail/pdgmnkfhhpafnheecbbfdigakffbfkea?utm_source=item-share-cb)
 
 ### From Source
 
