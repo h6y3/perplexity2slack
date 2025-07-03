@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Perplexity to Slack",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Copy content from Perplexity.ai in Slack-compatible markdown format",
   "permissions": ["activeTab", "clipboardWrite", "contextMenus"],
   "host_permissions": ["*://www.perplexity.ai/*"],

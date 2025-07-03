@@ -459,14 +459,6 @@ function addSlackButton(responseElement) {
   // Check if we already added a button to this element
   if (responseElement.querySelector('.slack-copy-button')) return;
 
-  // Check if there's already a button anywhere on the page
-  if (document.querySelector('.slack-copy-button')) {
-    // Remove any existing buttons (to handle page changes)
-    document.querySelectorAll('.slack-copy-button').forEach(btn => {
-      const container = btn.closest('.slack-button-container');
-      if (container) container.remove();
-    });
-  }
 
   // Find the copy button in this response
   const copyButton = responseElement.querySelector('button svg.tabler-icon-copy')?.closest('button');
@@ -718,13 +710,7 @@ function observeDynamicContent() {
 
     // Only update if needed
     if (shouldUpdate) {
-      // Remove any existing buttons first
-      document.querySelectorAll('.slack-copy-button').forEach(btn => {
-        const container = btn.closest('.slack-button-container');
-        if (container) container.remove();
-      });
-
-      // Re-add buttons to the correct locations
+      // Add buttons to any new response containers that don't have them
       const responses = findPerplexityResponses();
       responses.forEach(response => {
         addSlackButton(response);
